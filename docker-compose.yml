@@ -1,0 +1,10 @@
+---
+version: '3.8'
+services:
+  radiko-recorder:
+    build:
+      context: .
+      target: production
+    container_name: radiko-recorder
+    ports:
+      - "8080:8080"

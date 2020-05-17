@@ -52,7 +52,7 @@ class RadikoRecorder(object):
     def _get_media_playlist_url(self):
         """media playlistのURLを取得する"""
         u = self._make_master_playlist_url()
-        r = requests.get(url=u, headers=self._headers)
+        r = Requester.request_media_playlist_url(u, self._headers)
         if r.status_code != 200:
             logging.warning('failed to get media playlist url')
             logging.warning(f'status_code:{r.status_code}')
@@ -66,7 +66,7 @@ class RadikoRecorder(object):
     def _get_media_url(self, media_playlist_url):
         """音声ファイルのURLをmedia playlistから取得する"""
         query_time = int(datetime.now(tz=JST).timestamp() * 100)
-        r = requests.get(url=f'{media_playlist_url}&_={query_time}',headers=self._headers)
+        r = Requester.request_media_playlist_url(f'{media_playlist_url}&_={query_time}', self._headers)
         logging.debug(f'aac url:{media_playlist_url}&_={query_time}')
         if r.status_code != 200:
             return None
@@ -93,10 +93,10 @@ class RadikoRecorder(object):
                 if not os.path.isdir('./tmp'):
                     os.mkdir('./tmp')
                 try:
-                    ffmpeg\
-                    .input(filename=url, f='aac', headers=headers)\
-                    .output(filename=f'./tmp/{dt}.aac')\
-                    .run(capture_stdout=True)
+                    stream = ffmpeg\
+                        .input(filename=url, f='aac', headers=headers)\
+                        .output(filename=f'./tmp/{dt}.aac')
+                    ffmpeg.run(stream, capture_stdout=True)
                 except Exception as e:
                     logging.warning('failed in run ffmpeg')
                     logging.warning(e)
@@ -114,12 +114,18 @@ def record(station, program, rtime, outfilename):
     files = [f'./tmp/{e}.aac' for e in l]
     try:
         streams = [ffmpeg.input(filename=f) for f in files]
-        ffmpeg\
+        stream = ffmpeg\
             .concat(*streams,a=1,v=0)\
-            .output(filename=outfilename, absf='aac_adtstoasc')\
-            .run(capture_stdout=True)
+            .output(filename=outfilename, absf='aac_adtstoasc')
+        ffmpeg.run(stream, capture_stdout=True)
     except Exception as e:
         logging.warning('failed in run ffmpeg concat')
         logging.warning(e)
     for f in files:
         os.remove(f)
+
+
+class Requester:
+    @staticmethod
+    def request_media_playlist_url(url, headers):
+        return requests.get(url=url, headers=headers)
