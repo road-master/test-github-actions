@@ -3,8 +3,8 @@ import os
 import logging
 import responder
 
-from gcloud import upload_blob
-from radiko.recorder import record
+from gcloud import storage
+from radiko import recorder
 
 logging.basicConfig(filename=f'/var/log/record_radiko.log', level=logging.DEBUG)
 
@@ -28,8 +28,8 @@ async def record(req, resp):
         outfilename = f'./tmp/{current_time}_{station}_{program}.aac'
         logging.debug(f'outfilename:{outfilename}')
         # 録音してアップロード
-        record(station, program, rtime, outfilename)
-        upload_blob('radiko-recorder', outfilename, f'{current_time}_{station}_{program}.aac')
+        recorder.record(station, program, rtime, outfilename)
+        storage.upload_blob('radiko-recorder', outfilename, f'{current_time}_{station}_{program}.aac')
 
 
     process_param(req.params)
