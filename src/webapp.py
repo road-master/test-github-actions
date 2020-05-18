@@ -6,7 +6,10 @@ import responder
 from gcloud import storage
 from radiko import recorder
 
-logging.basicConfig(filename=f'/var/log/record_radiko.log', level=logging.DEBUG)
+logging.basicConfig(
+    filename=os.getenv('RADIKO_RECORDER_LOG_FILE', f'/var/log/record_radiko.log'),
+    level=logging.DEBUG,
+)
 
 api = responder.API()
 

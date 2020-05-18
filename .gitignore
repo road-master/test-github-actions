@@ -8,3 +8,4 @@ __pycache__
 radiko_recorder_account_key.json
 .vscode
 *.mp4
+.env

@@ -7,6 +7,22 @@ on:
     branches:
       - master
 jobs:
+  test-pipenv:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - run: python -m pip install pipenv
+      - run: python -m pipenv sync --dev
+      - run: python -m pipenv run pytest
+        env:
+          RADIKO_RECORDER_LOG_FILE: ./record_radiko.log
   test-yapf:
     runs-on: ubuntu-latest
     steps:
