@@ -26,6 +26,8 @@ m3u8 = "==0.5.2"
 requests = "==2.22.0"
 # To run Web API to record radiko
 responder = "==2.0.4"
+# To support Windows since Windows can't use ":" for file name
+pathvalidate = "*"
 
 [requires]
 # Since google-cloud-storage doesnt support python 3.8 in Windows at 2020-05-18

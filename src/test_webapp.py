@@ -1,10 +1,12 @@
 import logging
 import time
 from dataclasses import dataclass
+from glob import glob
 from pathlib import Path
 
 import pytest
 from callee import Regex
+from pathvalidate import sanitize_filename
 
 import webapp
 
@@ -93,24 +95,16 @@ class ResponseIterator:
 class AacFileCreator:
     def __init__(self):
         self.time = 0
-        self.path_current_directory = Path(__file__).parent
 
     def create(self, stream, capture_stdout):
         if self.time == 0:
             self.time = 1
-            logging.debug(
-                f'Path to file:{self.path_current_directory / "tmp/2020-05-18 03:06:20+09:00.aac"}'
-            )
-            (self.path_current_directory /
-             'tmp/2020-05-18 03:06:20+09:00.aac').write_bytes(b'')
+            Path(f'./tmp/{sanitize_filename("2020-05-18 03:06:20+09:00", platform="auto")}.aac').write_bytes(b'')
         elif self.time == 1:
             self.time = 2
-            (self.path_current_directory /
-             'tmp/2020-05-18 03:06:25+09:00.aac').write_bytes(b'')
+            Path(f'./tmp/{sanitize_filename("2020-05-18 03:06:25+09:00", platform="auto")}.aac').write_bytes(b'')
         elif self.time == 2:
             self.time = 3
-            (self.path_current_directory /
-             'tmp/2020-05-18 03:06:30+09:00.aac').write_bytes(b'')
+            Path(f'./tmp/{sanitize_filename("2020-05-18 03:06:30+09:00", platform="auto")}.aac').write_bytes(b'')
         else:
-            (self.path_current_directory /
-             'tmp/20200518_0106_TBS_hoge.aac').write_bytes(b'')
+            Path('./tmp/20200518_0106_TBS_hoge.aac').write_bytes(b'')

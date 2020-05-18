@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import requests
+from pathvalidate import sanitize_filename
 from requests.exceptions import Timeout
 import os
 import sys
@@ -95,7 +96,7 @@ class RadikoRecorder(object):
                 try:
                     stream = ffmpeg\
                         .input(filename=url, f='aac', headers=headers)\
-                        .output(filename=f'./tmp/{dt}.aac')
+                        .output(filename=f'./tmp/{sanitize_filename(f"{dt}", platform="auto")}.aac')
                     ffmpeg.run(stream, capture_stdout=True)
                 except Exception as e:
                     logging.warning('failed in run ffmpeg')
@@ -111,7 +112,7 @@ def record(station, program, rtime, outfilename):
     recorded = recorder.record()
     # mp3ファイルを一つに
     l = sorted(recorded)
-    files = [f'./tmp/{e}.aac' for e in l]
+    files = [f'./tmp/{sanitize_filename(f"{e}", platform="auto")}.aac' for e in l]
     try:
         streams = [ffmpeg.input(filename=f) for f in files]
         stream = ffmpeg\
