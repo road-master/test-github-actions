@@ -39,10 +39,10 @@ class TestWebApp:
                                     params={
                                         "station": "TBS",
                                         "program": "hoge",
-                                        "rtime": "1",
+                                        "rtime": "0.25",
                                     })
         assert response.text == "{\"success\": true}"
-        time.sleep(75)
+        time.sleep(20)
         assert 'WARNING' not in caplog.text
         mock_upload.assert_called_once_with(
             'radiko-recorder',

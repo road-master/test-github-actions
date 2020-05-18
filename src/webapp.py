@@ -17,7 +17,7 @@ async def record(req, resp):
     def process_param(params):
         station = params.get('station', '')
         program = params.get('program', '')
-        rtime = int(params.get('rtime', 0))
+        rtime = float(params.get('rtime', 0))
         JST = timezone(timedelta(hours=+9), 'JST')
         current_time = datetime.now(tz=JST).strftime("%Y%m%d_%H%M")
         logging.debug(f'current time: {current_time}, \
