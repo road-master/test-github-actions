@@ -14,8 +14,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.7'
-      - run: pip --disable-pip-version-check --no-cache-dir install -r requirements-dev.txt
-      - run: python -m yapf --diff --recursive src/radikotests/
+      - run: python -m pip install pipenv
+      - run: python -m pipenv sync --dev
+      - run: python -m pipenv run check_format
   test-docker:
     runs-on: ubuntu-latest
     steps:

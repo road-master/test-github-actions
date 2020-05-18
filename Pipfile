@@ -1,0 +1,36 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+# To test
+pytest = "*"
+# To mock requests to prevent slow test
+requests-mock = "*"
+# To graduate discussion about detailed code style of Python
+yapf = "*"
+# To mock requests and ffmpeg run to run test in cloud instance outside of Japan
+pytest-mock = "*"
+# To match argument of mock by regex
+callee = "*"
+
+[packages]
+# To control ffmpeg by Python
+ffmpeg-python = "==0.2.0"
+# To archive audio into Google Cloud Storage
+google-cloud-storage = "==1.23.0"
+# To parse m3u8 from radiko
+m3u8 = "==0.5.2"
+# To request to radiko
+requests = "==2.22.0"
+# To run Web API to record radiko
+responder = "==2.0.4"
+
+[requires]
+# Since google-cloud-storage doesnt support python 3.8 in Windows at 2020-05-18
+python_version = "3.7"
+
+[scripts]
+format = "yapf -i --recursive src/radikotests/"
+check_format = "python -m yapf --diff --recursive src/radikotests/"
