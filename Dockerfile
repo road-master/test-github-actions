@@ -1,4 +1,4 @@
-FROM python:3.7.5-buster
+FROM python:3.7.5-buster as production
 
 MAINTAINER Keisuke Yamanaka <vaivailx@gmail.com>
 
@@ -36,3 +36,8 @@ ENV GOOGLE_APPLICATION_CREDENTIALS=/app/radiko_recorder_account_key.json
 ENV PORT '8080'
 CMD python3 webapp.py
 EXPOSE 8080
+
+FROM production as test
+ADD ./requirements-dev.txt /app
+RUN pip --disable-pip-version-check --no-cache-dir install -r requirements-dev.txt
+CMD python3 -m pytest
