@@ -33,4 +33,4 @@ python_version = "3.7"
 
 [scripts]
 format = "yapf -i --recursive src/radikotests/"
-check_format = "python -m yapf --diff --recursive src/radikotests/"
+check_format = "yapf --diff --recursive src/radikotests/"
