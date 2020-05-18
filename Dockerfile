@@ -22,11 +22,11 @@ ENV DEBIAN_FRONTEND=
 
 ENV APP_HOME /app
 WORKDIR $APP_HOME
-ADD ./requirements.txt /app
+ADD ./Pipfile ./Pipfile.lock /app/
 
-# Update Python environment based on requirements.txt
-RUN pip --disable-pip-version-check --no-cache-dir install -r requirements.txt \
- && rm -rf requirements.txt
+RUN pip --no-cache-dir install pipenv \
+ && pipenv install --system --deploy \
+ && pip uninstall -y pipenv virtualenv-clone virtualenv
 
 ADD ./src /app
 
@@ -40,6 +40,7 @@ CMD python3 webapp.py
 EXPOSE 8080
 
 FROM production as test
-ADD ./requirements-dev.txt /app
-RUN pip --disable-pip-version-check --no-cache-dir install -r requirements-dev.txt
+RUN pip --no-cache-dir install pipenv \
+ && pipenv install --system --deploy --dev \
+ && pip uninstall -y pipenv virtualenv-clone virtualenv
 CMD python3 -m pytest
